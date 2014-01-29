@@ -1,0 +1,34 @@
+{
+  "name": "cacheup",
+  "description": "A general cache module",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-mocha": "~0.4.9",
+    "should": "~2.1.1",
+    "grunt-mocha-test": "~0.8.2"
+  },
+  "homepage": "https://github.com/laoshanlung/cacheup",
+  "keywords": [
+    "cache",
+    "redis"
+  ],
+  "author": {
+    "name": "Tan Nguyen",
+    "email": "laoshanlung@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laoshanlung/cacheup.git"
+  },
+  "dependencies": {
+    "underscore": "~1.5.2",
+    "when": "~2.7.1",
+    "redis": "~0.10.0",
+    "hiredis": "~0.1.16",
+    "arrg": "~0.1.3",
+    "backbone": "~1.1.0",
+    "hashring": "~1.0.3"
+  }
+}
