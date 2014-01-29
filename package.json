@@ -1,7 +1,7 @@
 {
   "name": "cacheup",
-  "description": "A general cache module",
-  "version": "0.0.1",
+  "description": "A general purpose cache library",
+  "version": "0.1.1",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.8.0",
