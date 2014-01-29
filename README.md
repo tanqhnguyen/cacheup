@@ -50,6 +50,16 @@ var cache = new Cacheup({
 
 Options can be passed in when calling a specific method to override the default one
 
+## Install
+```base
+npm install cacheup
+```
+
+Load the library
+```javascript
+var CacheUp = require('cacheup');
+```
+
 ## APIs
 All APIs support passing arguments normally as well as using object. For example
 ```javascript
