@@ -112,7 +112,7 @@ cache.set(key, value).done(function(data){
 });
 ```
 
-### CacheUp.set(key, value [, options, callback])
+### set(key, value [, options, callback])
 Cache a `value` in `key`  
 **Options**
 * `ttl`: set the time (in seconds) for the data to be cached  
@@ -142,7 +142,7 @@ cache.set(key, value, {ttl: 3600}, function(error, data){
 });
 ```
 
-### CacheUp.get(key [, options, callback])
+### get(key [, options, callback])
 Get the data at `key`  
 **Options**
 * `extendttl`: whether to auto reset the timer of the cached data
@@ -172,7 +172,7 @@ cache.get(key, {extendttl: true}, function(error, data){
 });
 ```
 
-### CacheUp.fetch(key, fetch [, options, callback])
+### fetch(key, fetch [, options, callback])
 This is the convinient method to get the data from somewhere when it is not available and return the cached data when it is already cached
 
 `fetch` can be written in callback or promise style. If it is written in callback style, the option `callback` must be set to true
@@ -210,19 +210,19 @@ cache.fetch(key, getRecordFromDb, {ttl: 10000}, function(error, data){
   // here, data can be either from queryDb or from the cache depends on the availability of it
 });
 ```
-### CacheUp.del(key, fetch [, options, callback])
+### del(key, fetch [, options, callback])
 Delete the data at key and return the key
 
 **Options**
 There is no option for this, the signature is just for consistency
 
-### CacheUp.check(key [, options, callback])
+### check(key [, options, callback])
 Get the remaining time of the key (in seconds)
 
 **Options**
 There is no option for this, the signature is just for consistency
 
-### CacheUp.touch(key [, options, callback])
+### touch(key [, options, callback])
 Reset the cache time for key
 
 **Options**
