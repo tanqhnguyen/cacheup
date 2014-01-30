@@ -1,12 +1,12 @@
 # CacheUp
 A general purpose caching library using multiple data storages
 
-At the moment, `CacheUp` supports 2 data storages `memory` and `redis`. The API for all storages are the same, so storages can be switched without changing any code
+At the moment, `CacheUp` supports 2 data storages `memory`, `file` and `redis`. The API for all storages are the same, so storages can be switched without changing any code
 
 ## Redis
 `CacheUp` supports the use of multiple redis servers through consistent hashing algorithm. The mechanism is quite simple at first and does not support re-hashing keys when adding/removing servers (could be added in the future versions)
 
-The simpliest configuration for `redis` when using `CacheUp`
+The sample configuration for `redis` when using `CacheUp`
 ```javascript
 var cache = new Cacheup({
   servers: [
@@ -35,9 +35,9 @@ var cache = new Cacheup({
 ```
 
 ## File
-Store cache in files. Considering the cost of SSD is now pretty low, using files for caching is also a cheap solution to increase the performance
+Store cache in files. Considering the cost of SSD is now pretty low, using files for caching is a cheap solution to increase the performance
 
-Initiate the `file` storage. Cache directory will be created if it is not existed. By default, if `cacheDir` is not set, `CacheUp` will create ` directory named `_cache` in `node_modules/cacheup/adatapers/_cache` to store cache files
+Initiate the `file` storage. Cache directory will be created if it is not existed. By default, if `cacheDir` is not set, `CacheUp` will create directory named `_cache` in `node_modules/cacheup/adatapers` to store cache files
 ```javascript
 var cache = new Cacheup({
   type: 'file',
