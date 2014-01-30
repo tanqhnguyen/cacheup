@@ -4,7 +4,7 @@ A general purpose caching library using multiple data storages
 At the moment, `CacheUp` supports 2 data storages `memory` and `redis`. The API for all storages are the same, so storages can be switched without changing any code
 
 ## Redis
-At the moment, `redis` does not have clustering support in the stable branch. `CacheUp` supports the use of multiple redis servers through consistent hashing algorithm. The mechanism is quite simple at first and does not support re-hashing keys when adding/removing servers (could be added in the future versions)
+`CacheUp` supports the use of multiple redis servers through consistent hashing algorithm. The mechanism is quite simple at first and does not support re-hashing keys when adding/removing servers (could be added in the future versions)
 
 The simpliest configuration for `redis` when using `CacheUp`
 ```javascript
@@ -32,6 +32,17 @@ var cache = new Cacheup({
   password: 'i-am-invincible',
   type: 'redis'
 }));
+```
+
+## File
+Store cache in files. Considering the cost of SSD is now pretty low, using files for caching is also a cheap solution to increase the performance
+
+Initiate the `file` storage. Cache directory will be created if it is not existed
+```javascript
+var cache = new Cacheup({
+  type: 'file',
+  cacheDir: '/absolute/path/to/cache/dir'
+})
 ```
 
 ## Memory
