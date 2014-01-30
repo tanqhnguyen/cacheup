@@ -302,6 +302,22 @@ var cacheLayer = function(req, res, next) {
 }
 ```
 
+## Benchmarks
+```bash
+Running benchmark File Cache [benchmarks/file_cache.js]...
+>> File Cache x 470 ops/sec ±1.91% (36 runs sampled)
+
+Running benchmark Memory Cache [benchmarks/memory_cache.js]...
+>> Memory Cache x 737 ops/sec ±0.89% (34 runs sampled)
+
+Running benchmark Raw redis set/get [benchmarks/raw_redis.js]...
+>> Raw redis set/get x 603 ops/sec ±1.26% (27 runs sampled)
+
+Running benchmark Redis Cache [benchmarks/redis_cache.js]...
+>> Redis Cache x 586 ops/sec ±1.34% (37 runs sampled)
+```
+The performance is somewhat similar to when using redis directly. In this particular case, file cache is slowest because of my 3-year-old 5400RPM HDD
+
 ## Development
 At the moment there are only several tests, more will be added later. Check `Gruntfile.js` and `package.json` for more information
 

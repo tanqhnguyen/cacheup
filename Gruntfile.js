@@ -30,11 +30,19 @@ module.exports = function(grunt) {
         jshintrc : '.jshintrc'
       },
       adapters : [ 'adapters/*.js' ]
+    },
+
+    benchmark: {
+      all: {
+        src: ['benchmarks/*.js'],
+        dest: 'benchmarks/results.csv'
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-benchmark');
 
   grunt.registerTask('default', ['jshint', 'mochaTest']);
 
