@@ -7,13 +7,7 @@ var Backbone = require('backbone')
 
 var Abstract = function(options){
   options = options || {};
-  options = _.defaults(options, {
-    ttl: 7200, // seconds
-    // by default, the cache expire time is not reset when it is accessed
-    // set this to true might be suitable for data that is expensive to computate
-    // but does not need to be refreshed too often
-    extendttl: false 
-  });
+  options = _.defaults(options, this.DEFAULTS);
 
   // one server or multiple servers?
   if (!options.servers) {
@@ -25,20 +19,15 @@ var Abstract = function(options){
     });
   }
 
-
-  _.each(options, function(value, key){
-    this[key] = value;
-  }, this);
-
-  if (!_.isArray(this.servers)) {
-    this.servers = [this.servers];
+  if (!_.isArray(options.servers)) {
+    options.servers = [options.servers];
   }
 
-  if (!this.type) {
+  if (!options.type) {
     throw "Must supply type";
   }
 
-  if (_.size(this.servers) === 0 && _.indexOf(skipRing, options.type) != -1) {
+  if (_.size(options.servers) === 0 && _.indexOf(skipRing, options.type) != -1) {
     throw "Must supply database connection";
   }
 
@@ -48,20 +37,28 @@ var Abstract = function(options){
   var skipRing = ['file', 'memory'];
   if (_.indexOf(skipRing, options.type) == -1) {
     var ringKeys = {};
-    _.each(this.servers, function(server){
+    _.each(options.servers, function(server){
       var key = server.host+':'+server.port;
       var weight = server.weight || 1;
       ringKeys[key] = weight;
     });
     this._ring = new HashRing(ringKeys);    
   }
-
+  this.options = options;
   this.initialize(options);
 };
 
 util.inherits(Abstract, EventEmitter);
 
 Abstract.extend = Backbone.Model.extend;
+
+Abstract.prototype.DEFAULTS = {
+  ttl: 7200, // seconds
+  // by default, the cache expire time is not reset when it is accessed
+  // set this to true might be suitable for data that is expensive to computate
+  // but does not need to be refreshed too often
+  extendttl: false 
+};
 
 Abstract.prototype.getRingValue = function(key) {
   return this._ring.get(key);

@@ -28,7 +28,7 @@ var MemoryAdapter = Abstract.extend({
   set: function(key, value, options) {
     options = options || {};
 
-    var ttl = options.ttl || this.ttl;
+    var ttl = options.ttl || this.options.ttl;
     
     this.storage[key] = {
       value: this._filterData(value),
@@ -44,10 +44,10 @@ var MemoryAdapter = Abstract.extend({
     var extendttl = options.extendttl;
 
     if (typeof(extendttl) == 'undefined') {
-      extendttl = this.extendttl;
+      extendttl = this.options.extendttl;
     }
 
-    var ttl = options.ttl || this.ttl;
+    var ttl = options.ttl || this.options.ttl;
 
     var entry = this.storage[key];
 
@@ -72,7 +72,7 @@ var MemoryAdapter = Abstract.extend({
   del: function(key, options) {
     options = options || {};
 
-    var ttl = options.ttl || this.ttl;
+    var ttl = options.ttl || this.options.ttl;
 
     delete this.storage[key];
 
@@ -91,7 +91,7 @@ var MemoryAdapter = Abstract.extend({
 
   touch: function(key, options) {
     options = options || {};
-    var ttl = options.ttl || this.ttl;
+    var ttl = options.ttl || this.options.ttl;
 
     var check = this.storage[key];
     var expire = 0;

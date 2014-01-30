@@ -22,7 +22,7 @@ var RedisAdapter = Abstract.extend({
     this._clients = {};
 
     // proxy error event to the EmitEmitter
-    _.each(this.servers, function(server){
+    _.each(this.options.servers, function(server){
       var client = createClient(server);
 
       client.on('error', function(error){
@@ -47,7 +47,7 @@ var RedisAdapter = Abstract.extend({
 
     var client = this._pickRedisClient(key);
 
-    var ttl = options.ttl || this.ttl;
+    var ttl = options.ttl || this.options.ttl;
 
     client.setex(key, ttl, this._filterData(value), function(error, result){
       if (error) {
@@ -71,10 +71,10 @@ var RedisAdapter = Abstract.extend({
     var extendttl = options.extendttl;
 
     if (typeof(extendttl) == 'undefined') {
-      extendttl = this.extendttl;
+      extendttl = this.options.extendttl;
     }
 
-    var ttl = options.ttl || this.ttl;
+    var ttl = options.ttl || this.options.ttl;
 
     client.get(key, function(error, result){
       if (error) {
@@ -98,7 +98,7 @@ var RedisAdapter = Abstract.extend({
 
     var client = this._pickRedisClient(key);
 
-    var ttl = options.ttl || this.ttl;
+    var ttl = options.ttl || this.options.ttl;
 
     client.del(key, function(error, result){
       if (error) {
@@ -134,7 +134,7 @@ var RedisAdapter = Abstract.extend({
 
     var client = this._pickRedisClient(key);
 
-    var ttl = options.ttl || this.ttl;
+    var ttl = options.ttl || this.options.ttl;
 
     client.expire(key, ttl, function(error, result){
       if (error) {
