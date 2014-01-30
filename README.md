@@ -37,7 +37,7 @@ var cache = new Cacheup({
 ## File
 Store cache in files. Considering the cost of SSD is now pretty low, using files for caching is also a cheap solution to increase the performance
 
-Initiate the `file` storage. Cache directory will be created if it is not existed
+Initiate the `file` storage. Cache directory will be created if it is not existed. By default, if `cacheDir` is not set, `CacheUp` will create ` directory named `_cache` in `node_modules/cacheup/adatapers/_cache` to store cache files
 ```javascript
 var cache = new Cacheup({
   type: 'file',

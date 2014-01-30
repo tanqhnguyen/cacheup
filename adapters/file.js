@@ -10,7 +10,7 @@ var Abstract = require('./abstract')
 var FileAdapter = Abstract.extend({
   initialize: function(options) {
     if (!options.cacheDir) {
-      throw "Must specify cacheDir";
+      this.options.cacheDir = __dirname + '/_cache';
     }
   },
 
