@@ -264,7 +264,7 @@ var fetch = function(ok) {
 
 // we can just use the query as the cache key
 // maybe hash it using md5 so we have smaller namespace
-cache.fetch(query, fetch).done(function(numbor){
+cache.fetch(query, fetch, {callback: true}).done(function(numbor){
   //output: 1
   console.log(numbor);
 }, handleError)
