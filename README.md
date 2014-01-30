@@ -206,8 +206,13 @@ var getRecordFromDbPromise = function() {
 }
 
 // then use it in cache
-cache.fetch(key, getRecordFromDb, {ttl: 10000}, function(error, data){
+cache.fetch(key, getRecordFromDbPromise, {ttl: 10000}, function(error, data){
   // here, data can be either from queryDb or from the cache depends on the availability of it
+});
+
+// or
+cache.fetch(key, getRecordFromDb, {ttl: 10000, callback: true}, function(error, data){
+  
 });
 ```
 ### del(key, fetch [, options, callback])
