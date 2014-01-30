@@ -47,7 +47,7 @@ var RedisAdapter = Abstract.extend({
 
     var client = this._pickRedisClient(key);
 
-    var ttl = options.ttl || this.options.ttl;
+    var ttl = this._getOption(options, 'ttl');
 
     client.setex(key, ttl, this._filterData(value), function(error, result){
       if (error) {
@@ -68,13 +68,8 @@ var RedisAdapter = Abstract.extend({
 
     var client = this._pickRedisClient(key);
 
-    var extendttl = options.extendttl;
-
-    if (typeof(extendttl) == 'undefined') {
-      extendttl = this.options.extendttl;
-    }
-
-    var ttl = options.ttl || this.options.ttl;
+    var extendttl = this._getOption(options, 'extendttl');
+    var ttl = this._getOption(options, 'ttl');
 
     client.get(key, function(error, result){
       if (error) {
@@ -98,7 +93,7 @@ var RedisAdapter = Abstract.extend({
 
     var client = this._pickRedisClient(key);
 
-    var ttl = options.ttl || this.options.ttl;
+    var ttl = this._getOption(options, 'ttl');
 
     client.del(key, function(error, result){
       if (error) {
@@ -134,7 +129,7 @@ var RedisAdapter = Abstract.extend({
 
     var client = this._pickRedisClient(key);
 
-    var ttl = options.ttl || this.options.ttl;
+    var ttl = this._getOption(options, 'ttl');
 
     client.expire(key, ttl, function(error, result){
       if (error) {

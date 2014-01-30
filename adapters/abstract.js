@@ -90,6 +90,15 @@ Abstract.prototype._filterData = function(data) {
   return data;
 };
 
+Abstract.prototype._getOption = function(options, key) {
+  var option = options[key];
+  if (typeof(option) == 'undefined') {
+    option = this.options[key];
+  }
+
+  return option;
+};
+
 Abstract.prototype.defer = function() {
   // abstraction for promise
   var deferred = when.defer();
