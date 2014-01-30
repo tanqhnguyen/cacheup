@@ -301,11 +301,13 @@ var cacheLayer = function(req, res, next) {
 At the moment there are only several tests, more will be added later. Check `Gruntfile.js` and `package.json` for more information
 
 ## TODOs
-* Support more cache storages such as `file`, `mongodb`, `couchbase` etc...
+* Support more cache storages such as `memcached`, `mongodb`, `couchbase` etc...
 * Improve the performance where possible
 * More tests
 * More docs
 * Somehow think of more ways to cache data instead of just `key-value` at the moment
+* (Maybe) Move the adapters into separated repositories
+* Support custom adapter
 
 ## License
 MIT
