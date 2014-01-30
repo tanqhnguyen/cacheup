@@ -47,9 +47,11 @@ var Abstract = function(options){
   // setup ring using host:port as the convention for ring keys
   var skipRing = ['file', 'memory'];
   if (_.indexOf(skipRing, options.type) == -1) {
-    var ringKeys = [];
+    var ringKeys = {};
     _.each(this.servers, function(server){
-      ringKeys.push(server.host+':'+server.port);
+      var key = server.host+':'+server.port;
+      var weight = server.weight || 1;
+      ringKeys[key] = weight;
     });
     this._ring = new HashRing(ringKeys);    
   }
