@@ -17,9 +17,9 @@ module.exports = function(grunt) {
     mochaTest: {
       test: {
         options: {
-          timeout: 5000,
+          timeout: 2500,
           reporter: 'spec',
-          slow: 3000
+          slow: 2500
         },
         src: ['tests/test.js'],
       }

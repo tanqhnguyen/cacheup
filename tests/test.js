@@ -27,3 +27,17 @@ describe('CacheUp:Redis', function(){
 
   redisTests(redisCache);
 });
+
+var fileCache = new CacheUp({
+  cacheDir: __dirname + '/cache_dir',
+  type: 'file'
+});
+
+describe('CacheUp:File', function(){
+  sharedTests(fileCache);
+
+  after(function(done){
+    fileCache.clear();
+    done();
+  });
+});

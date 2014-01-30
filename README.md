@@ -60,6 +60,20 @@ Load the library
 var CacheUp = require('cacheup');
 ```
 
+## Dependencies
+```javascript
+"dependencies": {
+  "underscore": "~1.5.2",
+  "when": "~2.7.1",
+  "redis": "~0.10.0",
+  "arrg": "~0.1.3",
+  "backbone": "~1.1.0",
+  "hashring": "~1.0.3",
+  "fs-extra": "~0.8.1",
+  "hiredis": "~0.1.16" // (optional but recommended)
+}
+```
+
 ## APIs
 All APIs support passing arguments normally as well as using object. For example
 ```javascript

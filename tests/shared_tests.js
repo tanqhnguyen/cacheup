@@ -12,7 +12,8 @@ module.exports = function(cache) {
     it('sets and returns data', function(done){
       var self = this;
       var obj = {"some": "data"};
-      cache.set('test', obj).ensure(done).done(function(data){
+      var key = new Date().getTime();
+      cache.set(key, obj).ensure(done).done(function(data){
         should(_.isEqual(obj, data)).be.ok;
       }, should.fail);
     });
@@ -22,8 +23,8 @@ module.exports = function(cache) {
 
       var key = new Date().getTime();
       var obj = {"some": "data"};
-      cache.set(key, obj).ensure(done).then(function(){
-        cache.get(key).done(function(data){
+      cache.set(key, obj).then(function(){
+        cache.get(key).ensure(done).done(function(data){
           should(_.isEqual(data, obj)).be.ok;
         }, should.fail);
       })
@@ -106,9 +107,8 @@ module.exports = function(cache) {
 
       cache.set(key, obj).done(function(){
         cache.del(key).done(function(){
-          cache.get(key).done(function(data){
+          cache.get(key).ensure(done).done(function(data){
             should(data).not.be.ok;
-            done();
           }, should.fail);
         }, should.fail)
       }, should.fail)
@@ -234,7 +234,7 @@ module.exports = function(cache) {
       });
     });
 
-    it('supports passing arguments as an object in promis-style', function(done){
+    it('supports passing arguments as an object in promise-style', function(done){
       var obj = {"some": "data"};
       var key = new Date().getTime();
 

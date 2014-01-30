@@ -87,7 +87,7 @@ var RedisAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  del: function(key, value, options) {
+  del: function(key, options) {
     options = options || {};
     var deferred = this.defer();
 
