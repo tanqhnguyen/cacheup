@@ -11,7 +11,6 @@ module.exports = function(cache) {
   it('sets and returns data', function(done){
     var self = this;
     var obj = {"some": "data"};
-
     cache.set('test', obj).ensure(done).done(function(data){
       should(_.isEqual(obj, data)).be.ok;
     }, should.fail);
@@ -37,7 +36,7 @@ module.exports = function(cache) {
 
     var check = function() {
       cache.check(key).ensure(done).done(function(ttl){
-        should(ttl == 7200).be.ok;
+        should(ttl == cache.DEFAULTS.ttl).be.ok;
       }, should.fail);
     }
 
@@ -74,7 +73,7 @@ module.exports = function(cache) {
       setTimeout(function(){
         cache.get(key).done(function(data){
           cache.check(key).ensure(done).done(function(ttl){
-            should(ttl).be.equal(7199);
+            should(ttl).be.lessThan(cache.DEFAULTS.ttl);
           }, should.fail);
         }, should.fail);
       }, 1000);
@@ -91,7 +90,7 @@ module.exports = function(cache) {
       setTimeout(function(){
         cache.get(key, {extendttl: true}).done(function(data){
           cache.check(key).ensure(done).done(function(ttl){
-            should(ttl).be.equal(7200);
+            should(ttl).be.equal(cache.DEFAULTS.ttl);
           }, should.fail);
         }, should.fail);
       }, 1000);
@@ -178,7 +177,7 @@ module.exports = function(cache) {
     cache.set(key, obj).done(function(){
       setTimeout(function(){
         cache.touch(key).ensure(done).done(function(ttl){
-          should(ttl).be.equal(7200);
+          should(ttl).be.equal(cache.DEFAULTS.ttl);
         }, should.fail);
       }, 1000);
     }, should.fail);

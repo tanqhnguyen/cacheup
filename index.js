@@ -20,6 +20,8 @@ var Cacheup = function(options){
     self.emit('error', error);
   });
 
+  this.DEFAULTS = this.adapter.DEFAULTS;
+
   EventEmitter.call(this);
 };
 util.inherits(Cacheup, EventEmitter);
