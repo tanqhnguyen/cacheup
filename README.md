@@ -301,7 +301,7 @@ var cacheLayer = function(req, res, next) {
 At the moment there are only several tests, more will be added later. Check `Gruntfile.js` and `package.json` for more information
 
 ## TODOs
-* Support more cache storages such as `memcached`, `mongodb`, `couchbase` etc...
+* Support more cache storages such as ~~`file`~~, `memcached`, `mongodb`, `couchbase` etc...
 * Improve the performance where possible
 * More tests
 * More docs
