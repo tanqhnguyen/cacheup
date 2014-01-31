@@ -37,7 +37,7 @@ module.exports = function(cache) {
       var obj = {"some": "data"};
 
       var check = function() {
-        cache.check(key).ensure(done).done(function(ttl){
+        cache.ttl(key).ensure(done).done(function(ttl){
           should(ttl).be.equal(cache.DEFAULTS.ttl);
         }, should.fail);
       }
@@ -55,7 +55,7 @@ module.exports = function(cache) {
       var customttl = 3600;
 
       var check = function() {
-        cache.check(key).ensure(done).done(function(ttl){
+        cache.ttl(key).ensure(done).done(function(ttl){
           should(ttl == customttl).be.ok;
         }, should.fail);
       }
@@ -74,7 +74,7 @@ module.exports = function(cache) {
       cache.set(key, obj).then(function(){
         setTimeout(function(){
           cache.get(key).done(function(data){
-            cache.check(key).ensure(done).done(function(ttl){
+            cache.ttl(key).ensure(done).done(function(ttl){
               should(ttl).be.lessThan(cache.DEFAULTS.ttl);
             }, should.fail);
           }, should.fail);
@@ -91,7 +91,7 @@ module.exports = function(cache) {
       cache.set(key, obj).then(function(){
         setTimeout(function(){
           cache.get(key, {extendttl: true}).done(function(data){
-            cache.check(key).ensure(done).done(function(ttl){
+            cache.ttl(key).ensure(done).done(function(ttl){
               should(ttl).be.equal(cache.DEFAULTS.ttl);
             }, should.fail);
           }, should.fail);

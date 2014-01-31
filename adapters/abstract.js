@@ -174,12 +174,20 @@ Abstract.prototype.set = function(key, value, options) {
   return this._set(key, value, options);
 };
 
+Abstract.prototype.ttl = function(key, options) {
+  return this._ttl(key, options);
+};
+
 // concrete adapters must implement the following methods
 Abstract.prototype._get = function(key, options) {
   throw "Needs implementation";
 };
 
 Abstract.prototype._set = function(key, value, options) {
+  throw "Needs implementation";
+};
+
+Abstract.prototype._ttl = function(key, options) {
   throw "Needs implementation";
 };
 

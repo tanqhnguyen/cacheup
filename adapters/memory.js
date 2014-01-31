@@ -62,7 +62,7 @@ var MemoryAdapter = Abstract.extend({
     return this._fakePromise(key);
   },
 
-  check: function(key) {
+  _ttl: function(key) {
     var check = this.storage[key];
     var expire = 0;
     if (check) {

@@ -87,8 +87,8 @@ Cacheup.prototype.fetch = function() {
   return this._callAdapter('fetch', args.key, args.fetch, args.options, args.callback);
 };
 
-Cacheup.prototype.check = function(key) {
-  return this._callAdapter('check', key);
+Cacheup.prototype.ttl = function(key) {
+  return this._callAdapter('ttl', key);
 };
 
 Cacheup.prototype.touch = function(key) {

@@ -133,7 +133,7 @@ var FileAdapter = Abstract.extend({
     return this._delFile(key);
   },
 
-  check: function(key) {
+  _ttl: function(key) {
     var self = this;
     var deferred = this.defer();
 

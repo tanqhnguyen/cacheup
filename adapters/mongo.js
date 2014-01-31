@@ -142,7 +142,7 @@ var MongoAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  check: function(key) {
+  _ttl: function(key) {
     var deferred = this.defer();
     var self = this;
 
