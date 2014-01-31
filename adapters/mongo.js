@@ -102,53 +102,30 @@ var MongoAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  get: function(key, options) {
+  processGet: function(key, options) {
     var self = this;
-    options = options || {};
     var deferred = this.defer();
-
-    var extendttl = options.extendttl;
-
-    if (typeof(extendttl) == 'undefined') {
-      extendttl = this.options.extendttl;
-    }
-
-    var ttl = options.ttl || this.options.ttl;
-
-    var resolve = function(value) {
-      deferred.resolve(self._parseData(value));
-    };
 
     this._pickCollection(key).done(function(collection){
       collection.findOne({
         key: self._key(key)
       }, function(error, item){
         if (error) return deferred.reject(error);
+        var value = item? item.value: null;
 
-        if (item) {
-          if (extendttl) {
-            self.touch(key, {ttl: ttl}).done(function(){
-              resolve(item.value);
-            }, deferred.reject);
-          } else {
-            if (item.expire <= self._currentTime) {
-              self.del(key).done(function(){
-                resolve(null);
-              });
-            } else {
-              resolve(item.value);
-            }
-          }
-        } else {
-          deferred.resolve(null);
+        if (item && item.expire <= self._currentTime) {
+          this.emit('expired', key);
+          return deferred.resolve(null);            
         }
+
+        return deferred.resolve(self._parseData(value));
       });
     }, deferred.reject);
 
     return deferred.promise;
   },
 
-  del: function(key, value, options) {
+  del: function(key, options) {
     var self = this;
     options = options || {};
     var deferred = this.defer();

@@ -38,30 +38,18 @@ var MemoryAdapter = Abstract.extend({
     return this._fakePromise(value);
   },
 
-  get: function(key, options) {
-    options = options || {};
-
-    var extendttl = this._getOption(options, 'extendttl');
-    var ttl = this._getOption(options, 'ttl');
-
+  processGet: function(key, options) {
     var entry = this.storage[key];
 
     if (entry && entry.expire <= this._currentTime()) {
-      // now we need to remove the entry
-      delete this.storage[key];
-    } else {
-      // update ttl, maybe?
-      if (extendttl) {
-        this.storage[key].expire = this._currentTime() + ttl;
-      }
+      this.emit('expired', key);
+    }
+    
+    if (entry) {
+      entry = this._parseData(entry.value);
     }
 
-    var data = this.storage[key];
-    if (data) {
-      data = this._parseData(data.value);
-    }
-
-    return this._fakePromise(data);
+    return this._fakePromise(entry);
   },
 
   del: function(key, options) {

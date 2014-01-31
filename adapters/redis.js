@@ -60,28 +60,15 @@ var RedisAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  get: function(key, options) {
+  processGet: function(key, options) {
     var self = this;
-
-    options = options || {};
     var deferred = this.defer();
 
     var client = this._pickRedisClient(key);
-
-    var extendttl = this._getOption(options, 'extendttl');
-    var ttl = this._getOption(options, 'ttl');
-
+    
     client.get(key, function(error, result){
-      if (error) {
-        deferred.reject(error);
-      } else {
-        if (extendttl) {
-          // we don't really care about the result, don't we?
-          client.expire(key, ttl); 
-        }
-        result = self._parseData(result);
-        deferred.resolve(result);
-      }
+      if (error) return deferred.reject(error);
+      deferred.resolve(self._parseData(result));
     });
 
     return deferred.promise;

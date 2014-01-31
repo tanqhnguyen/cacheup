@@ -3,6 +3,7 @@ var Backbone = require('backbone')
   , EventEmitter = require('events').EventEmitter
   , util = require('util')
   , HashRing = require('hashring')
+  , sequence = require('when/sequence')
   , when = require('when');
 
 var Abstract = function(options){
@@ -46,6 +47,10 @@ var Abstract = function(options){
   }
 
   this.options = options;
+
+  // some common events
+  this.on('expired', this.handleExpired);
+
   this.initialize(options);
 };
 
@@ -71,6 +76,10 @@ Abstract.prototype.initialize = function() {
 
 // helpers
 Abstract.prototype._parseData = function(data) {
+  if (!data) {
+    return null;
+  }
+  
   try {
     return JSON.parse(data);
   } catch (e) {
@@ -138,5 +147,43 @@ Abstract.prototype.fetch = function(key, fetch, options) {
 
   return deferred.promise;
 };
+
+Abstract.prototype.get = function(key, options) {
+    var self = this;
+    options = options || {};
+    var deferred = this.defer();
+
+    var extendttl = this._getOption(options, 'extendttl');
+    var ttl = this._getOption(options, 'ttl');
+
+    var promises = [];
+    if (extendttl) {
+      promises.push(this.touch(key, {ttl: ttl}));
+    }
+
+    promises.push(this.processGet(key, options));
+
+    when.all(promises).done(function(results){
+      deferred.resolve(_.last(results));
+    }, deferred.reject);
+
+    return deferred.promise;
+};
+
+// concrete adapters must implement the following methods
+Abstract.prototype.processGet = function(key, options) {
+  throw "Needs implementation";
+};
+
+// Event handlers
+Abstract.prototype.handleExpired = function(key) {
+  this.del(key, {}).done(function(){
+
+  }, this.logger.error);
+};
+
+// setup logger
+Abstract.prototype.logger = require('../libs/logger');
+
 
 module.exports = Abstract;

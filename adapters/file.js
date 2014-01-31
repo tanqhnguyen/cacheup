@@ -109,33 +109,18 @@ var FileAdapter = Abstract.extend({
     return this._writeFile(key, value, ttl);
   },
 
-  get: function(key, options) {
+  processGet: function(key, options) {
     var self = this;
-    options = options || {};
     var deferred = this.defer();
 
-    var extendttl = options.extendttl;
-
-    if (typeof(extendttl) == 'undefined') {
-      extendttl = this.options.extendttl;
-    }
-
-    var ttl = options.ttl || this.options.ttl;
-
-    this._readFile(key).otherwise(deferred.reject).done(function(data){
+    this._readFile(key).done(function(data){
       if (data.expire && data.expire <= self._currentTime()) {
-        self.del(key); // should take care of error here, maybe?
-        deferred.resolve(null);
-      } else {
-        if (extendttl) {
-          self.touch(key, {ttl: ttl}).otherwise(deferred.reject).done(function(){
-            deferred.resolve(self._parseData(data.value));
-          }); 
-        } else {
-          deferred.resolve(self._parseData(data.value));
-        }
+        self.emit('expired', key);
+        return deferred.resolve(null);
       }
-    });
+
+      return deferred.resolve(self._parseData(data.value));
+    }, deferred.reject);
 
     return deferred.promise;
   },
@@ -152,9 +137,9 @@ var FileAdapter = Abstract.extend({
     var self = this;
     var deferred = this.defer();
 
-    this._readFile(key).otherwise(deferred.reject).done(function(data){
+    this._readFile(key).done(function(data){
       deferred.resolve(data.expire - self._currentTime());
-    });
+    }, deferred.reject);
 
     return deferred.promise;
   },
