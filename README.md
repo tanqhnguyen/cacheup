@@ -263,7 +263,7 @@ Delete the data at key and return the key
 **Options**
 There is no option for this, the signature is just for consistency
 
-### check(key [, options, callback])
+### ttl(key [, options, callback])
 Get the remaining time of the key (in seconds)
 
 **Options**
