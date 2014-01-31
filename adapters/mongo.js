@@ -82,7 +82,7 @@ var MongoAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  set: function(key, value, options) {
+  _set: function(key, value, options) {
     var self = this;
     options = options || {};
     var deferred = this.defer();
@@ -102,7 +102,7 @@ var MongoAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  processGet: function(key, options) {
+  _get: function(key, options) {
     var self = this;
     var deferred = this.defer();
 

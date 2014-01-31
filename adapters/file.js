@@ -99,7 +99,7 @@ var FileAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  set: function(key, value, options) {
+  _set: function(key, value, options) {
     var self = this;
     options = options || {};
     var deferred = this.defer();
@@ -109,7 +109,7 @@ var FileAdapter = Abstract.extend({
     return this._writeFile(key, value, ttl);
   },
 
-  processGet: function(key, options) {
+  _get: function(key, options) {
     var self = this;
     var deferred = this.defer();
 

@@ -25,7 +25,7 @@ var MemoryAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  set: function(key, value, options) {
+  _set: function(key, value, options) {
     options = options || {};
 
     var ttl = this._getOption(options, 'ttl');
@@ -38,7 +38,7 @@ var MemoryAdapter = Abstract.extend({
     return this._fakePromise(value);
   },
 
-  processGet: function(key, options) {
+  _get: function(key, options) {
     var entry = this.storage[key];
 
     if (entry && entry.expire <= this._currentTime()) {

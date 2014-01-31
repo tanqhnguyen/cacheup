@@ -149,29 +149,37 @@ Abstract.prototype.fetch = function(key, fetch, options) {
 };
 
 Abstract.prototype.get = function(key, options) {
-    var self = this;
-    options = options || {};
-    var deferred = this.defer();
+  var self = this;
+  options = options || {};
+  var deferred = this.defer();
 
-    var extendttl = this._getOption(options, 'extendttl');
-    var ttl = this._getOption(options, 'ttl');
+  var extendttl = this._getOption(options, 'extendttl');
+  var ttl = this._getOption(options, 'ttl');
 
-    var promises = [];
-    if (extendttl) {
-      promises.push(this.touch(key, {ttl: ttl}));
-    }
+  var promises = [];
+  if (extendttl) {
+    promises.push(this.touch(key, {ttl: ttl}));
+  }
 
-    promises.push(this.processGet(key, options));
+  promises.push(this._get(key, options));
 
-    when.all(promises).done(function(results){
-      deferred.resolve(_.last(results));
-    }, deferred.reject);
+  when.all(promises).done(function(results){
+    deferred.resolve(_.last(results));
+  }, deferred.reject);
 
-    return deferred.promise;
+  return deferred.promise;
+};
+
+Abstract.prototype.set = function(key, value, options) {
+  return this._set(key, value, options);
 };
 
 // concrete adapters must implement the following methods
-Abstract.prototype.processGet = function(key, options) {
+Abstract.prototype._get = function(key, options) {
+  throw "Needs implementation";
+};
+
+Abstract.prototype._set = function(key, value, options) {
   throw "Needs implementation";
 };
 

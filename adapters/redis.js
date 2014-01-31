@@ -39,7 +39,7 @@ var RedisAdapter = Abstract.extend({
     return this._clients[serverKey];
   },
 
-  set: function(key, value, options) {
+  _set: function(key, value, options) {
     var self = this;
 
     options = options || {};
@@ -60,12 +60,12 @@ var RedisAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  processGet: function(key, options) {
+  _get: function(key, options) {
     var self = this;
     var deferred = this.defer();
 
     var client = this._pickRedisClient(key);
-    
+
     client.get(key, function(error, result){
       if (error) return deferred.reject(error);
       deferred.resolve(self._parseData(result));
