@@ -125,7 +125,7 @@ var MongoAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  del: function(key, options) {
+  _del: function(key, options) {
     var self = this;
     options = options || {};
     var deferred = this.defer();
@@ -162,7 +162,7 @@ var MongoAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  touch: function(key, options) {
+  _touch: function(key, options) {
     var self = this;
     options = options || {};
     var deferred = this.defer();
@@ -190,7 +190,7 @@ var MongoAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  clear: function() {
+  _clear: function() {
     var self = this;
     _.each(this._dbCache, function(db){
       db.collection(self._collectionName()).remove(function(){

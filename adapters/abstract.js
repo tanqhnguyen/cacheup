@@ -178,6 +178,18 @@ Abstract.prototype.ttl = function(key, options) {
   return this._ttl(key, options);
 };
 
+Abstract.prototype.del = function(key, options) {
+  return this._del(key, options);
+};
+
+Abstract.prototype.clear = function() {
+  return this._clear();
+};
+
+Abstract.prototype.touch = function(key, options) {
+  return this._touch(key, options);
+};
+
 // concrete adapters must implement the following methods
 Abstract.prototype._get = function(key, options) {
   throw "Needs implementation";

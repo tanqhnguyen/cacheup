@@ -125,7 +125,7 @@ var FileAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  del: function(key, options) {
+  _del: function(key, options) {
     options = options || {};
 
     var ttl = options.ttl || this.options.ttl;
@@ -144,7 +144,7 @@ var FileAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  touch: function(key, options) {
+  _touch: function(key, options) {
     var self = this;
     options = options || {};
     var deferred = this.defer();
@@ -160,7 +160,7 @@ var FileAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  clear: function() {
+  _clear: function() {
     fsExtra.remove(this.options.cacheDir);
   }
 });

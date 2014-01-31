@@ -74,7 +74,7 @@ var RedisAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  del: function(key, options) {
+  _del: function(key, options) {
     options = options || {};
     var deferred = this.defer();
 
@@ -109,7 +109,7 @@ var RedisAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  touch: function(key, options) {
+  _touch: function(key, options) {
     var self = this;
     options = options || {};
     var deferred = this.defer();
@@ -129,7 +129,7 @@ var RedisAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  clear: function() {
+  _clear: function() {
     // we dont really need to return anything here, do we?
     _.each(this._clients, function(client){
       client.flushdb();

@@ -52,7 +52,7 @@ var MemoryAdapter = Abstract.extend({
     return this._fakePromise(entry);
   },
 
-  del: function(key, options) {
+  _del: function(key, options) {
     options = options || {};
 
     var ttl = this._getOption(options, 'ttl');
@@ -72,7 +72,7 @@ var MemoryAdapter = Abstract.extend({
     return this._fakePromise(expire);
   },
 
-  touch: function(key, options) {
+  _touch: function(key, options) {
     options = options || {};
     var ttl = this._getOption(options, 'ttl');
 
@@ -85,7 +85,7 @@ var MemoryAdapter = Abstract.extend({
     return this._fakePromise(ttl);
   },
 
-  clear: function() {
+  _clear: function() {
     this.storage = {};
   }
 });
