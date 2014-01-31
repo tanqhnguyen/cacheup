@@ -71,7 +71,7 @@ var cache = new Cacheup({
 }));
 ```
 
-Or when there is only one redis server to be used
+Or when there is only one server to be used
 ```javascript
 var cache = new Cacheup({
   host: '127.0.0.1',
@@ -123,6 +123,7 @@ var CacheUp = require('cacheup');
   "backbone": "~1.1.0",
   "hashring": "~1.0.3",
   "fs-extra": "~0.8.1",
+  "mongodb": "~1.3.23",
   "hiredis": "~0.1.16" // (optional but recommended)
 }
 ```
