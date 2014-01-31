@@ -20,6 +20,10 @@ var MongoAdapter = Abstract.extend({
     return Math.round(currentTime/1000);
   },
 
+  _collectionName: function() {
+    return this.options.collection || MongoAdapter.COLLECTION_NAME;
+  },
+
   _authenticate: function(serverOptions, db) {
     var deferred = this.defer();
 
@@ -58,7 +62,7 @@ var MongoAdapter = Abstract.extend({
 
     if (db) {
       process.nextTick(function(){
-        deferred.resolve(db.collection(MongoAdapter.COLLECTION_NAME));
+        deferred.resolve(db.collection(self._collectionName()));
       });
     } else {
       server.options = server.options || {};
@@ -70,7 +74,7 @@ var MongoAdapter = Abstract.extend({
         var _db = client.db(server.database);
         self._authenticate(server, _db).done(function(finalDb){
           self._dbCache[hostPort] = finalDb;
-          deferred.resolve(finalDb.collection(MongoAdapter.COLLECTION_NAME));
+          deferred.resolve(finalDb.collection(self._collectionName()));
         }, deferred.reject);
       });
     }
@@ -210,8 +214,9 @@ var MongoAdapter = Abstract.extend({
   },
 
   clear: function() {
+    var self = this;
     _.each(this._dbCache, function(db){
-      db.collection(MongoAdapter.COLLECTION_NAME).remove(function(){
+      db.collection(self._collectionName()).remove(function(){
 
       });
     });
