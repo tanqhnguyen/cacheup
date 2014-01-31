@@ -1,7 +1,7 @@
 # CacheUp
 A general purpose caching library using multiple data storages
 
-At the moment, `CacheUp` supports 2 data storages `memory`, `file` and `redis`. The API for all storages are the same, so storages can be switched without changing any code
+At the moment, `CacheUp` supports 4 data storages `memory`, `file`, `mongo` and `redis`. The API for all storages are the same, so storages can be switched without changing any code
 
 ## Redis
 `CacheUp` supports the use of multiple redis servers through consistent hashing algorithm. The mechanism is quite simple at first and does not support re-hashing keys when adding/removing servers (could be added in the future versions)
@@ -33,6 +33,8 @@ var cache = new Cacheup({
   type: 'redis'
 }));
 ```
+* `password` is optional
+* `host`, `port` are required
 
 ## File
 Store cache in files. Considering the cost of SSD is now pretty low, using files for caching is a cheap solution to increase the performance
@@ -45,6 +47,44 @@ var cache = new Cacheup({
 })
 ```
 
+## MongoDB
+Use mongo to store cache. Data is stored in a collection named `cacheup` which can be customized. Similar to `redis` adapter, `mongo` adapter also supports multiple databases through the use of consistent hashing algorithm
+
+```javascript
+var cache = new Cacheup({
+  servers: [
+    {
+      host: '127.0.0.1',
+      port: 27017,
+      database: 'cache',
+      collection: 'new_name'
+    },
+    {
+      host: '127.0.0.1',
+      port: 27016,
+      database: 'cache',
+      username: 'something',
+      password: 'i-am-invincible'
+    }
+  ],
+  type: 'mongo'
+}));
+```
+
+Or when there is only one redis server to be used
+```javascript
+var cache = new Cacheup({
+  host: '127.0.0.1',
+  port: 27017,
+  database: 'test',
+  username: 'mongo',
+  password: 'i-am-invincible',
+  type: 'mongo'
+}));
+```
+* `username`, `password`, `collection` are optional
+* `host`, `port`, `database` are required
+
 ## Memory
 Memory caching is not encouraged for using in production environment. It is supposed to be used during development (or demonstration) only. Using it in production might cause the server to be exploded and you hold full responsible for the consequences
 
@@ -56,6 +96,8 @@ var cache = new Cacheup({
 ```
 
 ## Other configuration options
+The following options are used for all adapters
+
 * `ttl`: the default time (in seconds) that the data should be cached. Default: `7200`
 * `extendttl`: auto increase the expire time of a key when accessing it. Default `false`. This should be changed to true if you want your data to be cached forever (well not really, but as long as someone accesses it, the timer is reset)
 
@@ -305,30 +347,40 @@ var cacheLayer = function(req, res, next) {
 ## Benchmarks
 ```bash
 Running benchmark File Cache [benchmarks/file_cache.js]...
->> File Cache x 470 ops/sec ±1.91% (36 runs sampled)
+>> File Cache x 471 ops/sec ±2.05% (36 runs sampled)
 
 Running benchmark Memory Cache [benchmarks/memory_cache.js]...
->> Memory Cache x 737 ops/sec ±0.89% (34 runs sampled)
+>> Memory Cache x 729 ops/sec ±1.38% (39 runs sampled)
+
+Running benchmark Mongo Cache [benchmarks/mongo_cache.js]...
+>> Mongo Cache x 356 ops/sec ±4.47% (33 runs sampled)
+
+Running benchmark Raw mongo insert/findOne [benchmarks/raw_mongo.js]...
+>> Raw mongo insert/findOne x 424 ops/sec ±2.01% (36 runs sampled)
 
 Running benchmark Raw redis set/get [benchmarks/raw_redis.js]...
->> Raw redis set/get x 603 ops/sec ±1.26% (27 runs sampled)
+>> Raw redis set/get x 623 ops/sec ±1.07% (39 runs sampled)
 
 Running benchmark Redis Cache [benchmarks/redis_cache.js]...
->> Redis Cache x 586 ops/sec ±1.34% (37 runs sampled)
+>> Redis Cache x 570 ops/sec ±1.46% (37 runs sampled)
 ```
-The performance is somewhat similar to when using redis directly. In this particular case, file cache is slowest because of my 3-year-old 5400RPM HDD
+The performance is somewhat similar to when using redis, mongodb directly. In this particular case, file cache is slowest because of my 3-year-old 5400RPM HDD
 
 ## Development
 At the moment there are only several tests, more will be added later. Check `Gruntfile.js` and `package.json` for more information
 
 ## TODOs
-* Support more cache storages such as ~~`file`~~, `memcached`, `mongodb`, `couchbase` etc...
+* Support more cache storages such as ~~`file`~~, `memcached`, ~~`mongodb`~~, `couchbase` etc...
 * Improve the performance where possible
 * More tests
 * More docs
 * Somehow think of more ways to cache data instead of just `key-value` at the moment
 * (Maybe) Move the adapters into separated repositories
 * Support custom adapter
+* Support add/remove servers on the fly
+* Support failover servers
+* Support cache size control for each adapters
+* Implement some mechanism to automatically remove expired data. Currently only `redis` with built-in `ttl` feature supports that. Other adapters purge expired data as soon as it is accessed but not automatically like redis does
 
 ## License
 MIT
