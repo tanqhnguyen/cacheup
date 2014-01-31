@@ -44,6 +44,7 @@ var Abstract = function(options){
     });
     this._ring = new HashRing(ringKeys);    
   }
+
   this.options = options;
   this.initialize(options);
 };

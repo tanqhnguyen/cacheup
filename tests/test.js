@@ -8,7 +8,7 @@ describe('CacheUp:Memory', function(){
   }));
 });
 
-
+// Redis tests
 var redisCache = new CacheUp({
   servers: [
     {
@@ -28,6 +28,7 @@ describe('CacheUp:Redis', function(){
   redisTests(redisCache);
 });
 
+// file tests
 var fileCache = new CacheUp({
   cacheDir: __dirname + '/cache_dir',
   type: 'file'
@@ -40,4 +41,19 @@ describe('CacheUp:File', function(){
     fileCache.clear();
     done();
   });
+});
+
+// mongo tests
+var mongoCache = new CacheUp({
+  servers: [
+    {
+      host: '127.0.0.1',
+      port: 27017,
+      database: 'test'
+    }
+  ],
+  type: 'mongo'
+});
+describe('CacheUp:Mongo', function(){
+  sharedTests(mongoCache);
 });

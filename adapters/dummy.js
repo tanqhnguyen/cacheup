@@ -1,6 +1,4 @@
 var Abstract = require('./abstract')
-  , fs = require('fs')
-  , arrg = require('arrg')
   , when = require('when')
   , _ = require('underscore');
 
@@ -13,6 +11,8 @@ var DummyAdapter = Abstract.extend({
     var self = this;
     options = options || {};
     var deferred = this.defer();
+
+    var ttl = this._getOption(options, 'ttl');
 
     // SET
 
@@ -40,8 +40,6 @@ var DummyAdapter = Abstract.extend({
   del: function(key, value, options) {
     options = options || {};
     var deferred = this.defer();
-
-    var ttl = options.ttl || this.options.ttl;
 
     // DEL
 

@@ -38,7 +38,7 @@ module.exports = function(cache) {
 
       var check = function() {
         cache.check(key).ensure(done).done(function(ttl){
-          should(ttl == cache.DEFAULTS.ttl).be.ok;
+          should(ttl).be.equal(cache.DEFAULTS.ttl);
         }, should.fail);
       }
 
@@ -96,7 +96,7 @@ module.exports = function(cache) {
             }, should.fail);
           }, should.fail);
         }, 1000);
-      })
+      });
     });
 
     it('deletes data', function(done){

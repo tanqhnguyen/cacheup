@@ -1,6 +1,7 @@
 var RedisAdapter = require('./adapters/redis')
   , MemoryAdapter = require('./adapters/memory')
   , FileAdapter = require('./adapters/file')
+  , MongoAdapter = require('./adapters/mongo')
   , EventEmitter = require('events').EventEmitter
   , util = require('util')
   , arrg = require('arrg')
@@ -10,7 +11,8 @@ var RedisAdapter = require('./adapters/redis')
 var adapters = {
   'redis': RedisAdapter,
   'memory': MemoryAdapter,
-  'file': FileAdapter
+  'file': FileAdapter,
+  'mongo': MongoAdapter
 }
 
 var Cacheup = function(options){
