@@ -1,13 +1,13 @@
 var Abstract = require('./abstract')
   , arrg = require('arrg')
+  , Timer = require('../libs/timer')
   , _ = require('underscore');
 
 var MemoryAdapter = Abstract.extend({
-  sync: true,
-  
   initialize: function() {
     var self = this;
     this.storage = {};
+    this.timer = new Timer();
   },
 
   _currentTime: function() {
@@ -30,44 +30,35 @@ var MemoryAdapter = Abstract.extend({
 
     var ttl = this._getOption(options, 'ttl');
     
-    this.storage[key] = {
-      value: this._filterData(value),
-      expire: this._currentTime() + ttl
-    };
+    this.storage[key] = this._filterData(value);
+    this.timer.start(key, ttl, function(){
+      delete this.storage[key];
+    }, this);
 
     return this._fakePromise(value);
   },
 
   _get: function(key, options) {
     var entry = this.storage[key];
-
-    if (entry && entry.expire <= this._currentTime()) {
-      this.emit('expired', key);
-    }
     
     if (entry) {
-      entry = this._parseData(entry.value);
+      entry = this._parseData(entry);
     }
-
+    
     return this._fakePromise(entry);
   },
 
   _del: function(key, options) {
     options = options || {};
 
-    var ttl = this._getOption(options, 'ttl');
-
     delete this.storage[key];
+    this.timer.stop(key);
 
     return this._fakePromise(key);
   },
 
   _ttl: function(key) {
-    var check = this.storage[key];
-    var expire = 0;
-    if (check) {
-      expire = check.expire - this._currentTime();
-    }
+    expire = this.timer.timeleft(key);
 
     return this._fakePromise(expire);
   },
@@ -75,18 +66,14 @@ var MemoryAdapter = Abstract.extend({
   _touch: function(key, options) {
     options = options || {};
     var ttl = this._getOption(options, 'ttl');
-
-    var check = this.storage[key];
-    var expire = 0;
-    if (check) {
-      this.storage[key].expire = this._currentTime() + ttl;
-    }
+    this.timer.reset(key, ttl);
 
     return this._fakePromise(ttl);
   },
 
   _clear: function() {
     this.storage = {};
+    this.timer.clearAll();
   }
 });
 
