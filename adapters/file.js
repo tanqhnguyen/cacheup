@@ -5,6 +5,7 @@ var Abstract = require('./abstract')
   , arrg = require('arrg')
   , when = require('when')
   , path = require('path')
+  , Timer = require('../libs/timer')
   , _ = require('underscore');
 
 var FileAdapter = Abstract.extend({
@@ -12,6 +13,8 @@ var FileAdapter = Abstract.extend({
     if (!options.cacheDir) {
       this.options.cacheDir = __dirname + '/_cache';
     }
+
+    this.timer = new Timer();
   },
 
   _makeDir: function() {
@@ -32,13 +35,12 @@ var FileAdapter = Abstract.extend({
     return deferred.promise;
   },
 
-  _currentTime: function() {
-    var currentTime = new Date().getTime();
-    return Math.round(currentTime/1000);
+  _constructKey: function(key) {
+    return md5(key+'');
   },
 
   _constructPath: function(key) {
-    key = md5(key+'');
+    key = this._constructKey(key);
     return path.join(this.options.cacheDir, key);
   },
 
@@ -52,30 +54,25 @@ var FileAdapter = Abstract.extend({
       if (error) {
         if (error.errno == 34) {
           // file not existed, just return dump data
-          data = JSON.stringify({expire: null, value: null});
+          data = null;
         } else {
           return deferred.reject(error);
         }
       }
-      deferred.resolve(self._parseData(data.toString()));
+      deferred.resolve(data? data.toString(): null);
     });
 
     return deferred.promise;
   },
 
   _writeFile: function(key, data, ttl) {
-    var filteredData = this._filterData(data);
+    var self = this;
     var deferred = this.defer();
-
-    var actualContent = {
-      value: filteredData,
-      expire: this._currentTime() + ttl
-    };
 
     var path = this._constructPath(key);
 
     this._makeDir().done(function(){
-      fs.writeFile(path, JSON.stringify(actualContent), {
+      fs.writeFile(path, self._filterData(data), {
 
       }, function(error, result){
         if (error) return deferred.reject(error);
@@ -105,8 +102,13 @@ var FileAdapter = Abstract.extend({
     var deferred = this.defer();
 
     var ttl = this._getOption(options, 'ttl');
+    var promise = this._writeFile(key, value, ttl);
 
-    return this._writeFile(key, value, ttl);
+    this.timer.start(this._constructKey(key), ttl, function(){
+      this._delFile(key);
+    }, this);
+
+    return promise;
   },
 
   _get: function(key, options) {
@@ -114,12 +116,7 @@ var FileAdapter = Abstract.extend({
     var deferred = this.defer();
 
     this._readFile(key).done(function(data){
-      if (data.expire && data.expire <= self._currentTime()) {
-        self.emit('expired', key);
-        return deferred.resolve(null);
-      }
-
-      return deferred.resolve(self._parseData(data.value));
+      return deferred.resolve(self._parseData(data));
     }, deferred.reject);
 
     return deferred.promise;
@@ -127,8 +124,7 @@ var FileAdapter = Abstract.extend({
 
   _del: function(key, options) {
     options = options || {};
-
-    var ttl = options.ttl || this.options.ttl;
+    this.timer.stop(this._constructKey(key));
 
     return this._delFile(key);
   },
@@ -137,9 +133,9 @@ var FileAdapter = Abstract.extend({
     var self = this;
     var deferred = this.defer();
 
-    this._readFile(key).done(function(data){
-      deferred.resolve(data.expire - self._currentTime());
-    }, deferred.reject);
+    process.nextTick(function(){
+      deferred.resolve(self.timer.timeleft(self._constructKey(key)));
+    });
 
     return deferred.promise;
   },
@@ -151,10 +147,9 @@ var FileAdapter = Abstract.extend({
 
     var ttl = options.ttl || this.options.ttl;
 
-    this._readFile(key).otherwise(deferred.reject).done(function(data){
-      self.set(key, data.value, {ttl: ttl}).otherwise(deferred.reject).done(function(){
-        deferred.resolve(ttl);
-      });
+    process.nextTick(function(){
+      self.timer.reset(self._constructKey(key), ttl);
+      deferred.resolve(ttl);
     });
 
     return deferred.promise;
@@ -162,6 +157,7 @@ var FileAdapter = Abstract.extend({
 
   _clear: function() {
     fsExtra.remove(this.options.cacheDir);
+    this.timer.clearAll();
   }
 });
 
