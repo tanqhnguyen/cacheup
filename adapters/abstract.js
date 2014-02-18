@@ -203,6 +203,18 @@ Abstract.prototype._ttl = function(key, options) {
   throw "Needs implementation";
 };
 
+Abstract.prototype._del = function(key, options) {
+  throw "Needs implementation";
+};
+
+Abstract.prototype._touch = function(key, value, options) {
+  throw "Needs implementation";
+};
+
+Abstract.prototype._clear = function(key, options) {
+  throw "Needs implementation";
+};
+
 // Event handlers
 Abstract.prototype.handleExpired = function(key) {
   this.del(key, {}).done(function(){
