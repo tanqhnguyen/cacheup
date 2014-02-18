@@ -47,44 +47,6 @@ var cache = new Cacheup({
 })
 ```
 
-## MongoDB
-Use mongo to store cache. Data is stored in a collection named `cacheup` which can be customized. Similar to `redis` adapter, `mongo` adapter also supports multiple databases through the use of consistent hashing algorithm
-
-```javascript
-var cache = new Cacheup({
-  servers: [
-    {
-      host: '127.0.0.1',
-      port: 27017,
-      database: 'cache',
-      collection: 'new_name'
-    },
-    {
-      host: '127.0.0.1',
-      port: 27016,
-      database: 'cache',
-      username: 'something',
-      password: 'i-am-invincible'
-    }
-  ],
-  type: 'mongo'
-}));
-```
-
-Or when there is only one server to be used
-```javascript
-var cache = new Cacheup({
-  host: '127.0.0.1',
-  port: 27017,
-  database: 'test',
-  username: 'mongo',
-  password: 'i-am-invincible',
-  type: 'mongo'
-}));
-```
-* `username`, `password`, `collection` are optional
-* `host`, `port`, `database` are required
-
 ## Memory
 Memory caching is not encouraged for using in production environment. It is supposed to be used during development (or demonstration) only. Using it in production might cause the server to be exploded and you hold full responsible for the consequences
 
@@ -353,12 +315,6 @@ Running benchmark File Cache [benchmarks/file_cache.js]...
 Running benchmark Memory Cache [benchmarks/memory_cache.js]...
 >> Memory Cache x 729 ops/sec ±1.38% (39 runs sampled)
 
-Running benchmark Mongo Cache [benchmarks/mongo_cache.js]...
->> Mongo Cache x 356 ops/sec ±4.47% (33 runs sampled)
-
-Running benchmark Raw mongo insert/findOne [benchmarks/raw_mongo.js]...
->> Raw mongo insert/findOne x 424 ops/sec ±2.01% (36 runs sampled)
-
 Running benchmark Raw redis set/get [benchmarks/raw_redis.js]...
 >> Raw redis set/get x 623 ops/sec ±1.07% (39 runs sampled)
 
@@ -371,7 +327,7 @@ The performance is somewhat similar to when using redis, mongodb directly. In th
 At the moment there are only several tests, more will be added later. Check `Gruntfile.js` and `package.json` for more information
 
 ## TODOs
-* Support more cache storages such as ~~`file`~~, `memcached`, ~~`mongodb`~~, `couchbase` etc...
+* Support more cache storages such as ~~`file`~~, `memcached`, `couchbase` etc...
 * Improve the performance where possible
 * More tests
 * More docs
