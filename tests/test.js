@@ -1,6 +1,9 @@
 var CacheUp = require('../')
+  , timerTests = require('./timer_tests')
+  , should = require('should')
   , sharedTests = require('./shared_tests')
-  , redisTests = require('./redis_tests')
+
+timerTests();
 
 describe('CacheUp:Memory', function(){
   sharedTests(new CacheUp({
@@ -9,24 +12,25 @@ describe('CacheUp:Memory', function(){
 });
 
 // Redis tests
-var redisCache = new CacheUp({
-  servers: [
-    {
-      host: '127.0.0.1',
-      port: 6379
-    },
-    {
-      host: '127.0.0.1',
-      port: 6378
-    }
-  ],
-  type: 'redis'
-});
-describe('CacheUp:Redis', function(){
-  sharedTests(redisCache);
+// var redisTests = require('./redis_tests')
+// var redisCache = new CacheUp({
+//   servers: [
+//     {
+//       host: '127.0.0.1',
+//       port: 6379
+//     },
+//     {
+//       host: '127.0.0.1',
+//       port: 6378
+//     }
+//   ],
+//   type: 'redis'
+// });
+// describe('CacheUp:Redis', function(){
+//   sharedTests(redisCache);
 
-  redisTests(redisCache);
-});
+//   redisTests(redisCache);
+// });
 
 // file tests
 var fileCache = new CacheUp({
@@ -41,19 +45,4 @@ describe('CacheUp:File', function(){
     fileCache.clear();
     done();
   });
-});
-
-// mongo tests
-var mongoCache = new CacheUp({
-  servers: [
-    {
-      host: '127.0.0.1',
-      port: 27017,
-      database: 'test'
-    }
-  ],
-  type: 'mongo'
-});
-describe('CacheUp:Mongo', function(){
-  sharedTests(mongoCache);
 });
