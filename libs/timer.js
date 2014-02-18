@@ -9,6 +9,7 @@ var Timer = function() {
     timers[id] = {
       timeout: setTimeout(function(){
         func.apply(context, []);
+        delete timers[id];
       }, ttl*1000),
       callback: func,
       context: context,
